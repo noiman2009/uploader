@@ -15,9 +15,14 @@ function get_d(){
 }
 
 function parse_dir($get_dir,$conf_depth){
+    $dirlevel="";
+    $dir="";
 
     $config['enable_folder_maxdepth'] = $conf_depth;
     $config['storage_path'] = STORAGE_PATH;
+
+    echo __LINE__ . __FILE__ ;  var_dump($get_dir);
+    echo __LINE__ . __FILE__ ;  var_dump($config["enable_folder_maxdepth"]);
 
     if ($get_dir && $config['enable_folder_maxdepth']){
         $dir= explode("/",$get_dir);
@@ -52,6 +57,7 @@ function parse_dir($get_dir,$conf_depth){
     } else {
         //echo __LINE__ ."[dir]"; var_dump($dir);
         unset($dir);
+        $dir="";
     }
 
     $arr["dirlevel"] = $dirlevel;

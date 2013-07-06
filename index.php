@@ -33,8 +33,8 @@ $get_dir=get_d();
 //input:dir maxdepth
 //output:dirlevel config['storage_path']
 //dir
-echo __LINE__ ."[in]"; var_dump($get_dir);
-echo __LINE__ ."[in]"; var_dump($config['storage_path']);
+//echo __LINE__ ."[in]"; var_dump($get_dir);
+//echo __LINE__ ."[in]"; var_dump($config['enable_folder_maxdepth']);
 
 $arr=parse_dir($get_dir,$config['storage_path']);
 
@@ -42,9 +42,10 @@ $dirlevel=$arr["dirlevel"];
 $config['storage_path']=$arr["conf_storage_path"];
 $dir=$arr["dir"];
 
-echo __LINE__ ; var_dump($dir);
-echo __LINE__ ; var_dump($config["storage_path"]);
-echo __LINE__ ; var_dump($dirlevel);
+//echo __LINE__ ; var_dump($dir);
+//echo __LINE__ ; var_dump($config["storage_path"]);
+//echo __LINE__ ; var_dump($dirlevel);
+//echo __LINE__ . __FILE__ ; var_dump($_FILES['file']);
 
 //authentication
 $auth = !$config['admin_actived'];
@@ -61,10 +62,12 @@ ini_set('memory_limit','2200M');
 //find real max_filesize
 $max_filesize = $config['max_filesize'] * pow(1024,2);
 
-if (!$config['upload_progressbar']) //doesn't apply with the perl script
-	$max_filesize = min(return_bytes(ini_get('post_max_size')),return_bytes(ini_get('upload_max_filesize')),return_bytes(ini_get('memory_limit')),$max_filesize);
-
-
+if (!$config['upload_progressbar']){ //doesn't apply with the perl script
+    $max_filesize = min(return_bytes(ini_get('post_max_size')),return_bytes(ini_get('upload_max_filesize')),return_bytes(ini_get('memory_limit')),$max_filesize);
+}
+//echo __LINE__ . __FILE__ ; var_dump($max_filesize);
+//echo __LINE__ . __FILE__ ; var_dump($_POST["delete"]);
+//echo __LINE__ . __FILE__ ; var_dump($_FILES['file']);
 	
 // deleting
 if (isset($_POST["delete"])) {
@@ -78,16 +81,16 @@ function deletefile($cell){
 
 	//decode str
 	$str=stripslashes(urldecode($cell));
-    echo __LINE__ ."[str]"; var_dump($str);
+    //echo __LINE__ ."[str]"; var_dump($str);
 	$str=substr($str, strpos($str,'href="')+6);
-    echo __LINE__ ."[str]"; var_dump($str);
+    //echo __LINE__ ."[str]"; var_dump($str);
 	$str=substr($str,0, strpos($str,'"'));
-    echo __LINE__ ."[str]"; var_dump($str);
+    //echo __LINE__ ."[str]"; var_dump($str);
 	if (substr($str,0,10)=="?download=")
     $str = substr($str,10,strlen($str));
-    echo __LINE__ ."[str]"; var_dump($config["storage_path"]); // abc/
+    //echo __LINE__ ."[str]"; var_dump($config["storage_path"]); // abc/
 	$file = $config['storage_path'].'/'.basename($str);  //config[storage_path] = data/
-    echo __LINE__ ."[str]"; var_dump($file); //data/directoryname
+    //echo __LINE__ ."[str]"; var_dump($file); //data/directoryname
 
 	if (!file_exists($file))
 	echo $lang['delete_error_notfound']." ($file)";
@@ -110,28 +113,30 @@ function deletefile($cell){
 	exit;
 }
 
+//echo __LINE__ . __FILE__ ; var_dump($_POST['progress']);
+//echo __LINE__ . __FILE__ ; var_dump($_FILES['file']);
 //progress bar notification
 if (isset ($_POST['progress'])) {
 	//define filenames
 	$sessionid = basename($_POST['progress']);
 	$tmp_dir = $config['upload_tmpdir'];
-    echo __LINE__ ; var_dump($tmp_dir);
+    //echo __LINE__ ; var_dump($tmp_dir);
 	$error_file = $tmp_dir."/$sessionid"."_err";
-    echo __LINE__ ; var_dump($error_file);
+    //echo __LINE__ ; var_dump($error_file);
 	$signal_file = $tmp_dir."/$sessionid"."_signal";
-    echo __LINE__ ; var_dump($signal_file);
+    //echo __LINE__ ; var_dump($signal_file);
 	$info_file = $tmp_dir."/$sessionid"."_flength";
-    echo __LINE__ ; var_dump($info_file);
+    //echo __LINE__ ; var_dump($info_file);
 	$data_file = $tmp_dir."/$sessionid"."_postdata";
-    echo __LINE__ ; var_dump($data_file);
+    //echo __LINE__ ; var_dump($data_file);
 
-    echo __LINE__ ; var_dump($tmp_dir);
+    //echo __LINE__ ; var_dump($tmp_dir);
 	if(!file_exists($tmp_dir)) {
 		header("HTTP/1.1 500 Internal Server Error");
 		echo "tmp directory is invalid!";
 	} else if(file_exists($error_file)) {
 		# Send error code if error file exists
-    echo __LINE__ ; var_dump($error_file);
+    //echo __LINE__ ; var_dump($error_file);
 		header("HTTP/1.1 500 Internal Server Error");
 		echo file_get_contents($error_file);
 		//clean the shit
@@ -152,8 +157,13 @@ if (isset ($_POST['progress'])) {
 	exit;
 }
 
+//echo __LINE__ . __FILE__ ; var_dump($config['upload_progressbar']);
+//echo __LINE__ . __FILE__ ; var_dump($_FILES['file']);
+
 //progressbar upload
 if ($config['upload_progressbar']){
+
+    //echo __LINE__ . __FILE__ ; var_dump($config['upload_progressbar']);
 	if (isset($_GET['sid'])) {
 		$sid = $_GET['sid'];
 		$tmp_dir = $config['upload_tmpdir'];
@@ -186,29 +196,39 @@ if ($config['upload_progressbar']){
 	}
 }
 
+//echo __LINE__ . __FILE__ ; var_dump($_FILES['file']);
+
 //uploading
 if (isset($_FILES['file'])) {
 	if ($config['protect_upload']) authorize();
+    //echo __LINE__ . __FILE__ ; var_dump($_FILES['file']);
 	uploadfile($_FILES['file']);
 }
 
 function uploadfile($file) {
 	global $config, $lang, $max_filesize, $errormsg,$dir;
+    //echo __LINE__ . __FILE__ ; var_dump($file['error']);
+    //echo __LINE__ . __FILE__ ; var_dump($file);
 
 	if ($file['error']!=0) {
 		$errormsg = $lang['upload_error'][$file['error']];
-        echo __LINE__ ; var_dump($errormsg);
+        //echo __LINE__ .__FILE__; var_dump($errormsg);
+        //echo __LINE__ ; var_dump($file);
+        exit();
 		return;
 	}
 
 	//determine filename
 	$filename=$file['name'];
-	if (isset($_POST['filename']) && $_POST['filename']!="") $filename=$_POST['filename'];
+    //echo __LINE__ . __FILE__ ; var_dump($file['name']);
+	if (isset($_POST['filename']) && $_POST['filename']!=""){ $filename=$_POST['filename'];}
+    //echo __LINE__ . __FILE__ ; var_dump($filename);
 	$filename=basename($filename);
 	$filename=explode(".",basename($filename));
 	$ext = $filename[count($filename)-1];
 	unset($filename[count($filename)-1]);
 	$filename=join('_',$filename).'.'.$ext;
+    //echo __LINE__ . __FILE__ ; var_dump($filename);
 	
 	if (!in_array(strtolower(extname($filename)), $config['allowed_ext'])) {
 		$errormsg = $lang['upload_badext'];
@@ -217,23 +237,26 @@ function uploadfile($file) {
 
 	$filesize=$file['size'];
 	if ($filesize > $max_filesize) {
-		@unlink($file['tmp_name']);
+		unlink($file['tmp_name']);
+        //echo __LINE__ ;  var_dump($file);
 		$errormsg = $lang['upload_error_sizelimit'].' ('.getfilesize($max_filesize).').';
 		return;
 	}
 
-    echo __LINE__ ;  var_dump($config['storage_path']);
+    //echo __LINE__ ;  var_dump($config['storage_path']);
 	$filedest = $config['storage_path'].'/'.$filename;
 	if (file_exists($filedest) && !$config['allow_overwrite']) {
-		@unlink($file['tmp_name']);
+        //echo __LINE__ ;  var_dump($filedest);
+		unlink($file['tmp_name']);
 		$errormsg = "$filename ".$lang['upload_error_fileexist'];
 		return;
 	}
 
 	$filesource=$file['tmp_name'];
-    echo __LINE__ ; var_dump($filesource);
-    echo __LINE__ ; var_dump($filedest);
+    //echo __LINE__ ; var_dump($filesource);
+    //echo __LINE__ ; var_dump($filedest);
 	if (!file_exists($filesource)) {
+    //echo __LINE__ . __FILE__ ; var_dump($errormsg);
 		$errormsg = "$filesource do no exist!";
 		return;
 	} else if (!move_uploaded_file($filesource,$filedest)) {
@@ -258,21 +281,21 @@ if (isset ($_POST['dir'])) {
 	if ($config['protect_makedir']) authorize();
 	if ($dirlevel < $config['enable_folder_maxdepth']) {
 		$newdir = preg_replace("/[^0-9a-zA-Z\(\)\s]/i",'', $_POST['dir']);
-        echo __LINE__ ; var_dump($newdir); ///qqq
+        //echo __LINE__ ; var_dump($newdir); ///qqq
 		if ($newdir <> "") {
-            echo __LINE__ ; var_dump($config['storage_path']);
+            //echo __LINE__ ; var_dump($config['storage_path']);
 			$newdir = $config['storage_path']."/".$newdir;
-            echo __LINE__ ; var_dump($newdir);
+            //echo __LINE__ ; var_dump($newdir);
 			if (file_exists($newdir))
 				$errormsg = $lang['make_error_exist'];
 			else {
-                echo __LINE__ ; var_dump($newdir);
+                //echo __LINE__ ; var_dump($newdir);
                 if (mkdir($newdir)) {
                     // necessary to allow upload files to a new folder
                     chmod($newdir, 0755);
-                echo __LINE__ ; var_dump($newdir);
+                //echo __LINE__ ; var_dump($newdir);
                     $loc = rooturl();
-                echo __LINE__ ; var_dump($loc);
+                //echo __LINE__ ; var_dump($loc);
                     if (sizeof($dir)>0) $loc .= join("/",$dir)."/";
                     Header("Location: ".$loc);
                     exit;
@@ -328,13 +351,13 @@ function authorize($silent=false){
 
 
 function extname($file) {
-echo __LINE__ ; var_dump($file);
+//echo __LINE__ ; var_dump($file);
 	$file = explode(".",basename($file));
 	return $file[count($file)-1];
 }
 
 function getfilesize($size) {
-echo __LINE__ ; var_dump($size);
+//echo __LINE__ ; var_dump($size);
 	//if ($size < 2) return "$size byte";
 	$units = array(' B', ' KiB', ' MiB', ' GiB', ' TiB');
 	for ($i = 0; $size > 1024; $i++) { $size /= 1024; }
@@ -342,7 +365,7 @@ echo __LINE__ ; var_dump($size);
 }
 
 function return_bytes($val) {
-echo __LINE__ ; var_dump($val);
+//echo __LINE__ ; var_dump($val);
 	$val = trim($val);
 	if (empty($val)) return pow(1024,3);
 	$last = strtolower($val{(strlen($val)-1)});
@@ -387,13 +410,13 @@ function ls($dir) {
 	}
 
 	$files = Array();
-    echo __LINE__ ; var_dump($dir);
+    //echo __LINE__ ; var_dump($dir);
 	if ($handle = opendir($dir)) {
 		while (false !== ($file = readdir($handle))) {
 			if (substr($file,0,1) != "." && $file != "index.html") {
 				$size=filesize($dir."/".$file);
 				$date=filemtime($dir."/".$file);
-                echo __LINE__ ; var_dump($file);
+                //echo __LINE__ ; var_dump($file);
 				$ext=strtolower(extname($file));
 				if (is_dir($dir."/".$file)) $ext="directory";
 				if ($config['delete_after'] && ($date < mktime(0, 0, 0, date("m"), date("d")-$config['delete_after'], date("Y")))){
@@ -510,9 +533,9 @@ if ((isset($dir)) && sizeof($dir)>0) {
 <?php if (!$config['hide_delete'] || $auth) echo '<th id="th5" class="unsortable">'.$lang['delete'].'</th>'; ?>
 </tr>
 <?php 
-echo __LINE__ ; var_dump($config["storage_path"]); //data
+//echo __LINE__ ; var_dump($config["storage_path"]); //data
 $files = ls($config['storage_path']);
-echo __LINE__ ; var_dump($files); // ext = directoty
+//echo __LINE__ ; var_dump($files); // ext = directoty
 if (empty($files)){
     echo '  <tr><td class="lefted">'.$lang['nofiles'].'</td></tr>';
 } else {
@@ -523,6 +546,7 @@ if (empty($files)){
         if ($config['disable_directlink'] && $file['ext']!="directory")
             echo $file['file'];
         else {
+            $maxlen=100; ///////
             $dlink = $file['file'];
             if ($config['utf8encode_directlink'])
                 $dlink = utf8_encode($file['file']);
