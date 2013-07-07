@@ -3,10 +3,10 @@
 function get_d(){
     if (isset($_GET['d'])){
         $dir = $_GET['d'];
-        echo __LINE__ ; var_dump($dir);
+        //echo __LINE__ ; var_dump($dir);
     }else if (isset($_POST['d'])){
         $dir = $_POST['d'];
-        echo __LINE__ ; var_dump($dir);
+        //echo __LINE__ ; var_dump($dir);
     }else{ 
         //   echo __LINE__ ; var_dump($dir);
         $dir = ""; 
@@ -21,8 +21,8 @@ function parse_dir($get_dir,$conf_depth){
     $config['enable_folder_maxdepth'] = $conf_depth;
     $config['storage_path'] = STORAGE_PATH;
 
-    echo __LINE__ . __FILE__ ;  var_dump($get_dir);
-    echo __LINE__ . __FILE__ ;  var_dump($config["enable_folder_maxdepth"]);
+    //echo __LINE__ . __FILE__ ;  var_dump($get_dir);
+    //echo __LINE__ . __FILE__ ;  var_dump($config["enable_folder_maxdepth"]);
 
     if ($get_dir && $config['enable_folder_maxdepth']){
         $dir= explode("/",$get_dir);

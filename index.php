@@ -515,7 +515,7 @@ if ((isset($dir)) && sizeof($dir)>0) {
 			echo ' &raquo; '.$v.' ';
 		}else{ 
 			echo ' &raquo; <a href="'.$path.'">'.$v.'</a> ';
-            echo __LINE__ ; var_dump($path);
+            //echo __LINE__ ; var_dump($path);
         }
 			
 	}
