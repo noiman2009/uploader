@@ -9,3 +9,6 @@ else
 unzip -o "$filename"
 fi
 done
+
+
+rm -r __MACOSX
