@@ -72,7 +72,7 @@ if (!$config['upload_progressbar']){ //doesn't apply with the perl script
 // deleting
 if (isset($_POST["delete"])) {
 	if ($config['protect_delete']) authorize();
-    echo __LINE__ ."[delete]"; var_dump($_POST["delete"]);
+    //echo __LINE__ ."[delete]"; var_dump($_POST["delete"]);
 	deletefile($_POST["delete"]);
 }
 
@@ -394,7 +394,7 @@ function logadm($str) {
 	global $config, $lang;
 	if (!$config['log']) return;
 
-	$file_handle = fopen($config['log_filename'],"a+");
+	$file_handle = fopen($config['log_filename'],"ab+"); //binary mode
 	fwrite($file_handle, date("Y-m-d\TH:i:s").' '.sprintf("%15s",$_SERVER["REMOTE_ADDR"]).' '. $str."\n");
 	fclose($file_handle);
 }
@@ -404,7 +404,10 @@ function ls($dir) {
 	if ($demo){
 		// demo code -- deleteme file
 		$file = "data/deleteme.txt";
-		if (!$file_handle = fopen($file,"a")) { echo "Cannot open file"; }
+		//if (!$file_handle = fopen($file,"a")) { echo "Cannot open file"; }
+        exit();
+        //echo __LINE__ . __FILE__ ; var_dump("birnari-:");
+		if (!$file_handle = fopen($file,"ab")) { echo "Cannot open file"; } //binary
 		if (!fwrite($file_handle, "Delete me or I'll become fat!!!\n")) { echo "Cannot write to file"; }
 		fclose($file_handle);
 	}
@@ -506,20 +509,22 @@ if (!($config['hide_upload']) || $auth) { ?>
 
 <?php 
 if ((isset($dir)) && sizeof($dir)>0) {
-	echo '<div id="dirpath"><p>';
-	$path = rooturl();
-	echo '<a href="'.$path.'">w2box</a>';
-	foreach ($dir as $k => $v) {
-		$path .= "$v/";
-		if (sizeof($dir) == $k+1){
-			echo ' &raquo; '.$v.' ';
-		}else{ 
-			echo ' &raquo; <a href="'.$path.'">'.$v.'</a> ';
-            //echo __LINE__ ; var_dump($path);
+    echo '<div id="dirpath"><p>';
+    $path = rooturl();
+    echo '<a href="'.$path.'">w2box</a>';
+    if(!empty($dir)){
+        foreach ($dir as $k => $v) {
+            $path .= "$v/";
+            if (sizeof($dir) == $k+1){
+                echo ' &raquo; '.$v.' ';
+            }else{ 
+                echo ' &raquo; <a href="'.$path.'">'.$v.'</a> ';
+                //echo __LINE__ ; var_dump($path);
+            }
+
         }
-			
-	}
-	echo '<a href="..">(go up)</a></p></div>';
+    }
+    echo '<a href="..">(go up)</a></p></div>';
 }
 ?>
 <div id="filelisting">

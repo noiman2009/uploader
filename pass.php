@@ -20,7 +20,7 @@ if($invalid){
     exit();
 }else{
     //echo "<p>こんにちは、{$_SERVER['PHP_AUTH_USER']} さん。</p>"; echo "<p>{$_SERVER['PHP_AUTH_PW']} </p>";
-    echo "auth ok";
+    //echo "auth ok";
 
 }
 ?>

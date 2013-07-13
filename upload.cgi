@@ -49,7 +49,8 @@
 #############
 
 # set this to your tmp path, you can use this or a full path like the line afterward
-$tmp_dir= "tmp"; 
+#$tmp_dir= "tmp"; 
+$tmp_dir= "/tmp"; 
 #$tmp_dir= "/home/username/tmp";
 #$tmp_dir= "~/tmp";
 #$tmp_dir= "C:/wamp/tmp";
